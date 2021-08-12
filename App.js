@@ -1,63 +1,62 @@
 //yaimport { StatusBar } from "expo-status-bar";
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import Amplify, { Auth, Cache } from 'aws-amplify'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-//import Login from "./views/login/loginView";
-import { Translations } from '@aws-amplify/ui-components'
-import Amplify, { I18n } from 'aws-amplify'
+//components
 import awsconfig from './aws-exports.js'
-Amplify.configure(awsconfig)
-//import { Authenticator } from 'aws-amplify-react-native'
-import { withAuthenticator } from 'aws-amplify-react-native'
-//componets
+import Login from './views/login/loginView'
 import Main from './views/main/mainView'
 
-/*
+Amplify.configure(awsconfig)
+
+import { View, StyleSheet, Text } from 'react-native'
+//componets
+
 export default function App() {
-  const getData = (data) => {
-    console.log(data);
-  };
-  return (
+  const [isLogged, setIsLogged] = useState(false)
+  useEffect(() => {
+    Auth.currentSession().then(creds => {
+      console.log(creds)
+      if (creds) {
+        JSON.stringify(creds)
+        Cache.setItem('mobile-app-user', JSON.stringify(creds))
+        setIsLogged(true)
+      }
+    })
+  })
+
+  const getData = async data => {
+    try {
+      const user = await Auth.signIn(data.username, data.password)
+      console.log(user, 'ueer')
+      setIsLogged(true)
+    } catch (error) {
+      setIsLogged(false)
+      console.log('error signing in', error)
+    }
+  }
+
+  const Stack = createStackNavigator()
+  return !isLogged ? (
     <View style={styles.container}>
-      <Login handleChange={getData} />
-      <StatusBar style="auto" />
+      <Login handleChange={getData} doLoging={getData} />
     </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});*/
-
-I18n.putVocabulariesForLanguage('en-US', {
-  [Translations.SIGN_IN_HEADER_TEXT]: 'Inciar',
-  [Translations.SIGN_IN_ACTION]: 'Entrar',
-  [Translations.USERNAME_LABEL]: 'Usuario *',
-  [Translations.USERNAME_PLACEHOLDER]: 'Ingrese Email',
-  [Translations.PASSWORD_LABEL]: 'Contraseña *',
-  [Translations.PASSWORD_PLACEHOLDER]: 'Ingrese Contraseña',
-  [Translations.FORGOT_PASSWORD_TEXT]: '¿Olvido su contraseña?',
-  [Translations.USERNAME_PLACEHOLDER]: 'Entre sua Usuário',
-  [Translations.USERNAME_LABEL]: 'Digite seu usuario',
-})
-console.log('here')
-I18n.setLanguage('en-US')
-
-const Stack = createStackNavigator()
-
-function App() {
-  return (
+  ) : (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name='Main' component={Main} />
+        <Stack.Screen name='Inicio' component={Main} />
       </Stack.Navigator>
     </NavigationContainer>
   )
 }
 
-export default withAuthenticator(App, true)
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#1A1A1A',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'white',
+  },
+})

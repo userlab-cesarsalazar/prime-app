@@ -16,7 +16,7 @@ function Preload() {
 
 const Tab = createBottomTabNavigator()
 
-function Main() {
+export default function Main() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -24,9 +24,7 @@ function Main() {
           let iconName
           switch (route.name) {
             case 'Inicio':
-              iconName = focused
-                ? 'ios-information-circle'
-                : 'ios-information-circle-outline'
+              iconName = focused ? 'ios-home' : 'ios-home'
               break
             case 'Paquetes':
               iconName = 'ios-list'
@@ -50,9 +48,7 @@ function Main() {
       <Tab.Screen name='Inicio' component={HomeScreen} />
       <Tab.Screen name='Paquetes' component={PackagesScreen} />
       <Tab.Screen name='Pre alerta' component={Preload} />
-      <Tab.Screen name='Perfil' component={SettingsScreen} />
+      {/*<Tab.Screen name='Perfil' component={SettingsScreen} />*/}
     </Tab.Navigator>
   )
 }
-
-export default Main
